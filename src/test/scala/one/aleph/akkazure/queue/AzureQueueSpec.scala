@@ -50,7 +50,7 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
 
     assertResult(msgs.map(_.getMessageContentAsString)) {
       val future = AzureQueueSource(queue).take(10).runWith(Sink.seq)
-      Await.result(future, 3.seconds).map(_.getMessageContentAsString)
+      Await.result(future, 10.seconds).map(_.getMessageContentAsString)
     }
   }
 
@@ -60,7 +60,7 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
 
     assertResult(10) {
       val future = AzureQueueSource(queue).take(10).runWith(Sink.seq)
-      Await.result(future, 3.seconds).size
+      Await.result(future, 10.seconds).size
     }
   }
 
@@ -73,7 +73,7 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
 
     // Now we should not be able to get another one
     assertThrows[TimeoutException] {
-      Await.result(AzureQueueSource(queue).take(1).runWith(Sink.seq), 3.seconds)
+      Await.result(AzureQueueSource(queue).take(1).runWith(Sink.seq), 10.seconds)
     }
   }
 }
