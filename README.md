@@ -1,9 +1,9 @@
 # akkazure
+[![Build Status](https://travis-ci.org/akreuzer/akkastream-azure.svg?branch=master)](https://travis-ci.org/akreuzer/akkastream-azure)
 
 akkazure is a [Akka Stream](http://akka.io/) connector for the [Azure Queue Storage](https://azure.microsoft.com/en-us/services/storage/queues/).
 
 ## Example usage
-
 
 #### Init Azure Storage API
 
