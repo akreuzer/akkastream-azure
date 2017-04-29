@@ -7,6 +7,9 @@ import akka.Done
 import scala.concurrent.{ Future, ExecutionContext }
 
 object AzureQueueSink {
+  /**
+   * ScalaAPI: creates an [[AzureQueueSink]] which queues message.
+   */
   def apply(cloudQueue: CloudQueue, maxInFlight: Int = 4): Sink[CloudQueueMessage, Future[Done]] = {
     fromFunction(AzureQueueSinkFunctions.addMessage(cloudQueue)(_)(_), maxInFlight)
   }
@@ -20,12 +23,18 @@ object AzureQueueSink {
 }
 
 object AzureQueueDeleteSink {
+  /**
+   * ScalaAPI: creates an [[AzureQueueDeleteSink]] which deletes/dequeues messages.
+   */
   def apply(cloudQueue: CloudQueue, maxInFlight: Int = 4): Sink[CloudQueueMessage, Future[Done]] = {
     AzureQueueSink.fromFunction(AzureQueueSinkFunctions.deleteMessage(cloudQueue)(_)(_), maxInFlight)
   }
 }
 
 object AzureQueueDeleteOrUpdateSink {
+  /**
+   * ScalaAPI: creates an [[AzureQueueDeleteOrUpdateSink]] which deletes messages or updates the visibility timeout.
+   */
   def apply(cloudQueue: CloudQueue, maxInFlight: Int = 4): Sink[(CloudQueueMessage, DeleteOrUpdateMessage), Future[Done]] = {
     AzureQueueSink.fromFunction((input, ec) =>
       AzureQueueSinkFunctions.deleteOrUpdateMessage(cloudQueue)(input._1, input._2)(ec), maxInFlight)
