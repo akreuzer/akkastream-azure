@@ -17,11 +17,9 @@ object AzureQueueSink {
   }
 
   private[javadsl] def fromFunction[T](f: (T, ExecutionContext) => Future[Done], maxInFlight: Int): Sink[T, CompletionStage[Done]] = {
-    import akka.stream.scaladsl.{ Flow, Keep }
-    val flowStage = new FlowMapECStage[T, Future[Done]](f)
-    Flow.fromGraph(flowStage)
-      .mapAsync(maxInFlight)(identity)
-      .toMat(Sink.ignore)(Keep.right).asJava
+    import one.aleph.akkzure.queue.scaladsl.{ AzureQueueSink => AzureQueueSinkScalaDSL }
+    import scala.compat.java8.FutureConverters._
+    AzureQueueSinkScalaDSL.fromFunction(f, maxInFlight).mapMaterializedValue(_.toJava).asJava
   }
 }
 

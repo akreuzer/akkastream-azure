@@ -20,7 +20,6 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
 
   assume(storageConnectionStringOpt.isDefined, "Please set AZURE_CONNECTION_STRING for the live test.")
 
-  //val storageConnectionString = RoleEnvironment.getConfigurationSettings.get("StorageConnectionString")
   val storageAccount = CloudStorageAccount.parse(storageConnectionStringOpt.get)
   val queueClient = storageAccount.createCloudQueueClient
   val queue = queueClient.getQueueReference("testqueue")
@@ -75,14 +74,21 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
   }
 
   "AzureQueueDeleteSink" should "be able to delete messages" in {
-    // Queue 10 messages
+    // When queuing 10 messages
     val msgs = (1 to 10).map(_ => queueTestMsg)
     Await.result(Source(msgs).runWith(AzureQueueSink(queue)), timeout)
-    // Delete 10 messages
+    // and deleting 10 message 
     Await.result(AzureQueueSource(queue).take(10).runWith(AzureQueueDeleteSink(queue)), timeout)
 
-    // Now we should not be able to get another one
+    // then there should be no messages on the queue anymore
     assertCannotGetMessageFromQueue
+  }
+
+  it should "fail for messages not on the queue" in {
+    val msgs = (1 to 10).map(_ => queueTestMsg)
+    assertThrows[java.lang.IllegalArgumentException] {
+      Await.result(Source(msgs).runWith(AzureQueueDeleteSink(queue)), timeout)
+    }
   }
 
   "AzureQueueDeleteOrUpdateSink" should "be able to update visibility timeout" in {
@@ -112,5 +118,9 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
 
     // Now we should not be able to get another one
     assertCannotGetMessageFromQueue
+  }
+
+  "AzureQueueSink from javadsl" should "be able to queue messages" in {
+    AzureQueueSpecJava.azureQueueJavaDSL(queue, materializer)
   }
 }
