@@ -1,7 +1,7 @@
 # akkazure
 [![Build Status](https://travis-ci.org/akreuzer/akkastream-azure.svg?branch=master)](https://travis-ci.org/akreuzer/akkastream-azure)
 
-akkazure is a [Akka Stream](http://akka.io/) connector for the [Azure Queue Storage](https://azure.microsoft.com/en-us/services/storage/queues/).
+akkazure is an [Akka Stream](http://akka.io/) connector for the [Azure Queue Storage](https://azure.microsoft.com/en-us/services/storage/queues/).
 
 ## Example usage
 
@@ -15,9 +15,9 @@ val storageAccount = CloudStorageAccount.parse(storageConnectionString)
 val queueClient = storageAccount.createCloudQueueClient
 val queue = queueClient.getQueueReference("myQueue")
 ```
-[See the docs Microsoft.](https://docs.microsoft.com/en-us/azure/storage/storage-java-how-to-use-queue-storage)
+For more details, see [Microsoft Azure Storage Docs](https://docs.microsoft.com/en-us/azure/storage/storage-java-how-to-use-queue-storage).
 
-#### Queue a message
+#### Queuing a message
 ```scala
 import one.aleph.akkzure.queue._
 import one.aleph.akkzure.queue.scaladsl._
@@ -28,7 +28,7 @@ val message = new CloudQueueMessage("Hello Azure")
 Source.single(message).runWith(AzureQueueSink(queue)
 ```
 
-#### Process and delete messages
+#### Processing and deleting messages
 ```scala
 AzureQueueSource(queue).take(10)
 .map({ msg: CloudQueueMessage =>  
