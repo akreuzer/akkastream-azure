@@ -25,12 +25,13 @@ class AzureQueueSpec extends TestKit(ActorSystem()) with FlatSpecLike with Befor
   val queue = queueClient.getQueueReference("testqueue")
   queue.createIfNotExists
 
-  override def beforeEach() {
+  override def beforeEach: Unit = {
     queue.clear
-    super.beforeEach()
+    super.beforeEach
   }
-  override def afterAll {
+  override def afterAll: Unit = {
     TestKit.shutdownActorSystem(system)
+    super.afterAll
   }
 
   private var testMsgCount = 0
