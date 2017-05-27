@@ -4,7 +4,10 @@ import akka.stream.stage.{ GraphStage, GraphStageLogic, InHandler, OutHandler }
 import akka.stream.{ Attributes, Inlet, Outlet, FlowShape }
 import scala.concurrent.{ Future, ExecutionContext }
 
-class FlowMapECStage[In, Out](f: (In, ExecutionContext) => Out) extends GraphStage[FlowShape[In, Out]] {
+// This flow does just a map
+// with the exception that is also hands the ExecutionContext
+// of the materializer to the function f
+private[queue] class FlowMapECStage[In, Out](f: (In, ExecutionContext) => Out) extends GraphStage[FlowShape[In, Out]] {
   private val in = Inlet[In]("in")
   private val out = Outlet[Out]("out")
   override val shape = FlowShape(in, out)

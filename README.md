@@ -1,3 +1,8 @@
+# Moved into [alpakka](https://github.com/akka/alpakka).
+## See [alpakka Pull Request #287](https://github.com/akka/alpakka/pull/287).
+
+
+----
 # akkazure
 [![Build Status](https://travis-ci.org/akreuzer/akkastream-azure.svg?branch=master)](https://travis-ci.org/akreuzer/akkastream-azure)
 
